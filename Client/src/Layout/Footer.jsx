@@ -13,8 +13,7 @@ const Footer = () => {
                                 </div>
                                 <div className="add-content">
                                     <h5>Address</h5>
-                                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                                        sed do eiusmod tempor incididunt ut veniam </p>
+                                    <p> Farhad Nagar,Feni. </p>
                                 </div>
                             </div>
                         </div>
@@ -25,8 +24,8 @@ const Footer = () => {
                                 </div>
                                 <div className="add-content">
                                     <h5>Phone</h5>
-                                    <p> +(91) 000000000 <br/>
-                                        +(91) 000000000 </p>
+                                    <p> +88 01644213617 <br/>
+                                        +88 01544213617 </p>
                                 </div>
                             </div>
                         </div>
@@ -38,7 +37,7 @@ const Footer = () => {
                                 <div className="add-content">
                                     <h5>Email</h5>
                                     <p><a href="mailto:collab@codewithfaraz.com"
-                                          style={{textDecoration: 'none'}}>collab@codewithfaraz.com</a></p>
+                                          style={{textDecoration: 'none'}}>mdfawjulazim617@gmail.com</a></p>
                                 </div>
                             </div>
                         </div>
