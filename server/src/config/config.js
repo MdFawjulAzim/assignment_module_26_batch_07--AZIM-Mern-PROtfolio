@@ -1,4 +1,4 @@
-export const MONGODB_URL= "mongodb+srv://FawjulDemo:0arOjL584U44GvK3@cluster0.cymiz.mongodb.net/Portfolio"
+export const MONGODB_URL= "mongodb+srv://roots:roots@cluster0.3pcbx.mongodb.net/assignments_modules_26"
 
 //ACCESS TOKEN
 export const JWT_SECRET_TOKEN= "123RohanAzim"
