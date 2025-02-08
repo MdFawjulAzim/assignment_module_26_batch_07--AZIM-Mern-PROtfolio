@@ -1,13 +1,10 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import cookie from 'js-cookie';
-import CreateBlogs from "../components/Dashboard/CreateBLogs/CreateBlogs.jsx";
-
 const DashboardGet = create((set, get) => ({
     mainUrl: 'http://localhost:4000/api/v1',
     imgURl: 'http://localhost:4000',
     contacts: [],
-
     // Fetch Contacts with Authorization Token
     contactgetDataReq: async () => {
         try {
@@ -21,10 +18,8 @@ const DashboardGet = create((set, get) => ({
             console.error('Error fetching contact data:', error);
         }
     },
-
     isFormSubmit: false,
     LoginFormValue: { email: "", password: "" },
-
     // Handle Form Change
     LoginFormChange: (name, value) => {
         set((state) => ({
@@ -34,17 +29,13 @@ const DashboardGet = create((set, get) => ({
             }
         }))
     },
-
     isAuthenticated: !!cookie.get('token'),  // ✅ এখানে টোকেন চেক করা হচ্ছে
-
     isLogin: () => {
         return get().isAuthenticated;
     },
-
     updateAuthState: () => {
         set({ isAuthenticated: !!cookie.get('token') });
     },
-
     // Login Function
     SubmitLogin: async (loginForm) => {
         try {
@@ -75,7 +66,6 @@ const DashboardGet = create((set, get) => ({
                 console.error("No token found!");
                 return;
             }
-
             const res = await axios.get(`${mainUrl}/logout`, {
                 headers: { Authorization: `Bearer ${token}` }, // টোকেন পাঠানো হচ্ছে
                 withCredentials: true,
@@ -98,8 +88,6 @@ const DashboardGet = create((set, get) => ({
             console.error("Error during logout:", error);
         }
     },
-
-
     // Initial State
     CreateBlog: {
         title: "",
@@ -116,24 +104,21 @@ const DashboardGet = create((set, get) => ({
 
     },
 // Handle Form Change
+    // 🔹 Form Change Function for Blogs (where image is also updated)
     FormChangeBlogs: (name, value) => {
         set((state) => {
-            // Update CreateBlog state with the new value
             const updatedBlog = { ...state.CreateBlog, [name]: value };
-
-            // If the name is 'image', also update CreateHero.image and CreateAbout.image
-            const updatedHero = name === 'image'
-                ? { ...state.CreateHero, image: value }
-                : state.CreateHero;
-
-            const updatedAbout = name === 'image'
-                ? { ...state.CreateAbout, image: value }
-                : state.CreateAbout;
-
+            // If the name is 'image', update all related states
+            const updatedHero = name === "image" ? { ...state.CreateHero, image: value } : state.CreateHero;
+            const updatedAbout = name === "image" ? { ...state.CreateAbout, image: value } : state.CreateAbout;
+            const updatedTeam = name === "image" ? { ...state.CreateTeam, image: value } : state.CreateTeam;
+            const updatedService = name === "image" ? { ...state.CreateService, image: value } : state.CreateService;
             return {
                 CreateBlog: updatedBlog,
                 CreateHero: updatedHero,
-                CreateAbout: updatedAbout
+                CreateAbout: updatedAbout,
+                CreateTeam: updatedTeam,
+                CreateService: updatedService // ✅ Update CreateService.image
             };
         });
     },
@@ -328,7 +313,109 @@ const DashboardGet = create((set, get) => ({
             console.error("Error creating about section:", error.response?.data || error.message);
             return { success: false, error: true };
         }
-    }
+    },
+
+
+    CreateTeam: {
+        name: "",
+        designation: "",
+        image: ""
+    },
+
+    // 🔹 Form Change Function
+    FormChangeTeam: (name, value) => {
+        set((state) => ({
+            CreateTeam: {
+                ...state.CreateTeam,
+                [name]: value
+            }
+        }));
+    },
+
+    // API Call to Create Team Member
+    CreateTeamRequest: async (CreateTeam) => {
+        try {
+            const { mainUrl } = get();
+            const token = cookie.get("token");
+
+            if (!token) {
+                console.error("Token is missing! Please login again.");
+                return { success: false, error: "Unauthorized" };
+            }
+
+            const res = await axios.post(`${mainUrl}/create-team`, CreateTeam, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            return res.data;
+        } catch (error) {
+            console.error("Error creating team member:", error.response?.data || error.message);
+            return { success: false, error: true };
+        }
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    CreateService: {
+        title: "",
+        description: "",
+        image: "" // Image will be taken from FormChangeBlogs
+    },
+
+    // 🔹 Form Change Function for Service
+    FormChangeService: (name, value) => {
+        set((state) => {
+            const updatedService = { ...state.CreateService, [name]: value };
+
+            return {
+                CreateService: updatedService
+            };
+        });
+    },
+    CreateServiceRequest: async (CreateService) => {
+        try {
+            const { mainUrl } = get();
+            const token = cookie.get("token");
+
+            if (!token) {
+                console.error("Token is missing! Please login again.");
+                return { success: false, error: "Unauthorized" };
+            }
+
+            const res = await axios.post(`${mainUrl}/create-service`, CreateService, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            return res.data;
+        } catch (error) {
+            console.error("Error creating service:", error.response?.data || error.message);
+            return { success: false, error: true };
+        }
+    },
+
+
 }));
 
 export default DashboardGet;
